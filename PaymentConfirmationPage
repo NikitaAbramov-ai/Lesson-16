@@ -1,0 +1,34 @@
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class PaymentConfirmationPage {
+    private WebDriver driver;
+
+    @FindBy(css = ".confirmation-amount")
+    private WebElement confirmationAmount;
+
+    @FindBy(css = ".confirmation-phone")
+    private WebElement confirmationPhone;
+
+    @FindBy(css = ".confirmation-button")
+    private WebElement confirmationButton;
+
+    public PaymentConfirmationPage(WebDriver driver) {
+        this.driver = driver;
+        PageFactory.initElements(driver, this);
+    }
+
+    public String getConfirmationAmount() {
+        return confirmationAmount.getText();
+    }
+
+    public String getConfirmationPhone() {
+        return confirmationPhone.getText();
+    }
+
+    public String getConfirmationButtonText() {
+        return confirmationButton.getText();
+    }
+}
