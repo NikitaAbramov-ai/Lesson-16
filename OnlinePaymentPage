@@ -1,0 +1,42 @@
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import java.util.List;
+
+public class OnlinePaymentPage {
+    private WebDriver driver;
+
+    @FindBy(css = "input[placeholder='Номер телефона']")
+    private WebElement phoneNumberField;
+
+    @FindBy(css = "input[placeholder='Сумма']")
+    private WebElement amountField;
+
+    @FindBy(css = "button[type='submit']")
+    private WebElement continueButton;
+
+    @FindBy(css = ".payment-option")
+    private List<WebElement> paymentOptions;
+
+    public OnlinePaymentPage(WebDriver driver) {
+        this.driver = driver;
+        PageFactory.initElements(driver, this);
+    }
+
+    public void enterPhoneNumber(String phoneNumber) {
+        phoneNumberField.sendKeys(phoneNumber);
+    }
+
+    public void enterAmount(String amount) {
+        amountField.sendKeys(amount);
+    }
+
+    public void clickContinue() {
+        continueButton.click();
+    }
+
+    public List<WebElement> getPaymentOptions() {
+        return paymentOptions;
+    }
+}
