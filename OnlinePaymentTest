@@ -1,0 +1,66 @@
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+import pages.*;
+
+import java.util.List;
+
+public class OnlinePaymentTest {
+    private WebDriver driver;
+    private HomePage homePage;
+    private OnlinePaymentPage onlinePaymentPage;
+    private PaymentMethodPage paymentMethodPage;
+    private PaymentConfirmationPage paymentConfirmationPage;
+
+    @BeforeClass
+    public void setUp() {
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.get("https://www.mts.by");
+
+        homePage = new HomePage(driver);
+        onlinePaymentPage = new OnlinePaymentPage(driver);
+        paymentMethodPage = new PaymentMethodPage(driver);
+        paymentConfirmationPage = new PaymentConfirmationPage(driver);
+    }
+
+    @Test
+    public void testOnlinePayment() {
+        // Переход на страницу онлайн-пополнения
+        homePage.goToOnlinePaymentPage();
+
+        // Проверка надписей в незаполненных полях
+        List<WebElement> paymentOptions = onlinePaymentPage.getPaymentOptions();
+        for (WebElement option : paymentOptions) {
+            Assert.assertTrue(option.getText().contains("Заполните поле"));
+        }
+
+        // Заполнение полей для услуги связи
+        onlinePaymentPage.enterPhoneNumber("291234567");
+        onlinePaymentPage.enterAmount("10");
+        onlinePaymentPage.clickContinue();
+
+        // Проверка данных на странице подтверждения
+        Assert.assertEquals(paymentConfirmationPage.getConfirmationAmount(), "10 BYN");
+        Assert.assertEquals(paymentConfirmationPage.getConfirmationPhone(), "291234567");
+        Assert.assertTrue(paymentConfirmationPage.getConfirmationButtonText().contains("Оплатить 10 BYN"));
+
+        // Проверка незаполненных полей для карты
+        Assert.assertEquals(paymentMethodPage.getCardNumberPlaceholder(), "Номер карты");
+        Assert.assertEquals(paymentMethodPage.getExpiryDatePlaceholder(), "ММ/ГГ");
+        Assert.assertEquals(paymentMethodPage.getCvvPlaceholder(), "CVV");
+
+        // Проверка иконок платежных систем
+        List<WebElement> paymentSystemIcons = paymentMethodPage.getPaymentSystemIcons();
+        Assert.assertTrue(paymentSystemIcons.size() > 0);
+    }
+
+    @AfterClass
+    public void tearDown() {
+        driver.quit();
+    }
+}
