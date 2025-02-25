@@ -1,0 +1,48 @@
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class PaymentMethodPage {
+    private WebDriver driver;
+
+    @FindBy(css = ".card-number input")
+    private WebElement cardNumberField;
+
+    @FindBy(css = ".expiry-date input")
+    private WebElement expiryDateField;
+
+    @FindBy(css = ".cvv input")
+    private WebElement cvvField;
+
+    @FindBy(css = ".payment-systems img")
+    private List<WebElement> paymentSystemIcons;
+
+    @FindBy(css = ".confirm-button")
+    private WebElement confirmButton;
+
+    public PaymentMethodPage(WebDriver driver) {
+        this.driver = driver;
+        PageFactory.initElements(driver, this);
+    }
+
+    public String getCardNumberPlaceholder() {
+        return cardNumberField.getAttribute("placeholder");
+    }
+
+    public String getExpiryDatePlaceholder() {
+        return expiryDateField.getAttribute("placeholder");
+    }
+
+    public String getCvvPlaceholder() {
+        return cvvField.getAttribute("placeholder");
+    }
+
+    public List<WebElement> getPaymentSystemIcons() {
+        return paymentSystemIcons;
+    }
+
+    public void clickConfirmButton() {
+        confirmButton.click();
+    }
+}
